@@ -6,10 +6,21 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/core/utility.hpp"
 
-#include <stdio.h>
+#include <iostream>
 #include <sstream>
 
 using namespace cv;
 using namespace std;
 
-int stereo_match(int argc, char** argv);
+enum
+{
+	STEREO_BM = 0,
+	STEREO_SGBM = 1,
+	STEREO_HH = 2,
+	STEREO_VAR = 3,
+	STEREO_3WAY = 4,
+	STEREO_HH4 = 5
+};
+
+int stereo_match(Mat leftFrame, Mat rightFrame, Mat* depth, int alg, bool outFlag, bool speFlag, bool fileFlag);
+static void saveXYZ(const char* filename, const Mat& mat);

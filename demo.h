@@ -17,3 +17,5 @@ enum {
 	DISTANCE = 2,
 	LENGTH = 3
 };
+
+void empty_img_init(String text, Mat* emptyImg);

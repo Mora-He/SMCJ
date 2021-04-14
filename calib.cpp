@@ -4,6 +4,8 @@ void stereo_calib(vector<Mat> imagelist, Size boardSize, float squareSize)
 {
 	bool useCalibrated = true;
 	bool showRectified = true;
+	string intrinsic_filename = "intrinsic.yml";
+	string extrinsic_filename = "extrinsic.yml";
 
 	if (imagelist.size() % 2 != 0)
 	{
@@ -24,7 +26,7 @@ void stereo_calib(vector<Mat> imagelist, Size boardSize, float squareSize)
 	// 角点检测，一左一右对应
 	for (i = j = 0; i < nimages; i++)
 	{
-		std::cout << "i" << i << endl;
+		std::cout << "i" << i+1 << endl;
 		for (k = 0; k < 2; k++)
 		{
 			Mat img = imagelist[i * 2 + k];
@@ -71,6 +73,7 @@ void stereo_calib(vector<Mat> imagelist, Size boardSize, float squareSize)
 
 			cv::Mat gray;
 			cvtColor(img, gray, cv::COLOR_RGB2GRAY);
+			//gray = img;	//test
 			cv::cornerSubPix(gray, corners, Size(11, 11), Size(-1, -1),
 				TermCriteria(TermCriteria::COUNT + TermCriteria::EPS,
 					30, 0.01));		// 亚像素角点检测
@@ -152,7 +155,7 @@ void stereo_calib(vector<Mat> imagelist, Size boardSize, float squareSize)
 	std::cout << "average epipolar err = " << err / npoints << endl;
 
 	// 标定结果保存
-	FileStorage fs("intrinsics.yml", FileStorage::WRITE);
+	FileStorage fs(intrinsic_filename, FileStorage::WRITE);
 	if (fs.isOpened())
 	{
 		fs << "M1" << cameraMatrix[0] << "D1" << distCoeffs[0] <<
@@ -170,7 +173,7 @@ void stereo_calib(vector<Mat> imagelist, Size boardSize, float squareSize)
 		imageSize, R, T, R1, R2, P1, P2, Q,
 		CALIB_ZERO_DISPARITY, 1, imageSize, &validRoi[0], &validRoi[1]);
 
-	fs.open("extrinsics.yml", FileStorage::WRITE);
+	fs.open(extrinsic_filename, FileStorage::WRITE);
 	if (fs.isOpened())
 	{
 		fs << "R" << R << "T" << T << "R1" << R1 << "R2" << R2 << "P1" << P1 << "P2" << P2 << "Q" << Q;
@@ -243,6 +246,7 @@ void stereo_calib(vector<Mat> imagelist, Size boardSize, float squareSize)
 		{
 			Mat img = goodImagelist[i * 2 + k], rimg, cimg, gray;
 			cvtColor(img, gray, cv::COLOR_RGB2GRAY);
+			//gray = img;	// test
 			remap(gray, rimg, rmap[k][0], rmap[k][1], INTER_LINEAR);		// 坐标映射
 			cvtColor(rimg, cimg, COLOR_GRAY2BGR);
 			Mat canvasPart = !isVerticalStereo ? canvas(Rect(w*k, 0, w, h)) : canvas(Rect(0, h*k, w, h));
