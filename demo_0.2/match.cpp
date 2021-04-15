@@ -22,7 +22,7 @@ int stereo_match(Mat leftFrame, Mat rightFrame, Mat* depth, int alg, bool outFla
 	Mat left = leftFrame, right = rightFrame, disparity;
 	int SADWindowSize = 9, numberOfDisparities = -1;		// SAD窗口大小（匹配块大小），最大视差(原256)！！！！！！！！！！！
 	bool no_display = true, color_display = false;
-	float scale = 0.5;
+	float scale = 0.3;
 	string intrinsic_filename = speFlag ? "intrinsic.yml" : "";	// 输入
 	string extrinsic_filename = speFlag ? "extrinsic.yml" : "";
 	string disparity_filename = fileFlag ? "disparity.jpg" : "";	// 视差图文件

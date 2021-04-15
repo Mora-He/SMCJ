@@ -7,6 +7,7 @@
 #include <iostream>
 #include "calib.h"
 #include "match.h"
+#include <cmath>
 
 using namespace std;
 using namespace cv;

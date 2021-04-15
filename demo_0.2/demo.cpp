@@ -46,8 +46,10 @@ int main()
 		Mat right = imread("data\\right01.jpg", -1);		// test
 		//Mat left = imread("data\\left.jpg", -1);		// test 彩色图 -1 5s 3s
 		//Mat right = imread("data\\right.jpg", -1);		// test
+		//Mat left = imread("data\\aloeL.jpg", -1);		// test 灰度图 -1 3秒
+		//Mat right = imread("data\\aloeR.jpg", -1);		// test
 
-		int dispFlag = stereo_match(left, right, &disp, STEREO_SGBM, 1, 1, char(key) == 's');	// test
+		int dispFlag = stereo_match(left, right, &disp, STEREO_SGBM, 1, 0, char(key) == 's');	// test
 		//int dispFlag = stereo_match(leftFrame, rightFrame, &disp, STEREO_SGBM, char(key) == 'm', char(key) != 'u', char(key) == 's');	// m匹配时间的输出，u矫正图像，s视差图保存
 		//int dispFlag = -1;	// test
 		if (dispFlag == -1)
@@ -78,6 +80,12 @@ int main()
 		if (char(key) == 'd')
 		{
 			flag = DISTANCE;
+		}
+
+		// n不选择
+		if (char(key) == 'n')
+		{
+			flag = NONE;
 		}
 
 		// 0停止获取标定图片开始标定
@@ -174,7 +182,6 @@ void empty_img_init(String text, Mat* emptyImg)
 
 void disp_to_depth(Mat disp, Mat* depth)
 {
-	cout << disp.type() << endl;;
 	if (!(disp.type() == CV_8U || disp.type() == CV_8UC3))
 		return;
 
@@ -206,6 +213,7 @@ void disp_to_depth(Mat disp, Mat* depth)
 	float baseline = (float)T.at<double>(0, 0)*T.at<double>(0, 0)
 		+ T.at<double>(1, 0)*T.at<double>(1, 0)
 		+ T.at<double>(2, 0)*T.at<double>(2, 0);
+	baseline = sqrt(baseline);
 
 	int height = disp.rows;
 	int width = disp.cols;
@@ -225,5 +233,6 @@ void disp_to_depth(Mat disp, Mat* depth)
 	}
 
 	*depth = temp;
+	cout << depthData[height / 2 * width + width / 2] << endl;
 	return;
 }
