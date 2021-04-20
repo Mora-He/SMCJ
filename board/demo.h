@@ -19,5 +19,12 @@ enum {
 	LENGTH = 3
 };
 
+struct ImageData
+{
+    unsigned char* data;
+    int width;
+    int height;
+    int channels;
+}
 void empty_img_init(String text, Mat* emptyImg);
 void disp_to_depth(Mat disp, Mat* depth);

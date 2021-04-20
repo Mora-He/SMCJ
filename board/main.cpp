@@ -18,7 +18,7 @@
 #define SEETA_FACE2_PROC_WIDTH	640
 #define SEETA_FACE2_PROC_HEIGHT	480
 
-
+#include "in_out.h"
 
 typedef struct
 {
@@ -966,7 +966,7 @@ int main(int argc, char *argv[])
 	s_stDemoMngCtx.bContinue = true;
     
     // *********************** 此处为自己替换的变量 *********************
-
+	struct ImageData Left,right,result;
     // *********************** 结束 ********************************
 	while (s_stDemoMngCtx.bContinue)
 	{	
