@@ -109,27 +109,33 @@ int detect(struct ImageData* left, struct ImageData* right, struct ImageData* re
 	cv::Mat outLeft, outRight;
 	
 	cv::Size size(std::max(left_mat.cols, right_mat.cols), std::max(left_mat.rows, right_mat.rows));
-	cv::Mat result_mat;
+	cv::Mat result_rgb;
 
 	left_mat.data = left->data;
 	right_mat.data = right->data;
 
-	result_mat.create(size, CV_MAKETYPE(left_mat.depth(), 3));
-	result_mat.data = result->data;
-	result_mat = cvScalarAll(0);
+	result_rgb.create(size, CV_MAKETYPE(left_mat.depth(), 3));
+	//result_mat.data = result->data;
+	result_rgb = cvScalarAll(0);
 
 	cv::resize(left_mat, left_small, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
 	cv::resize(right_mat, right_small, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
 
 
-	result->channels = result_mat.channels();
-	result->width = result_mat.cols;
-	result->height = result_mat.rows;
+	result->channels = result_rgb.channels();
+	result->width = result_rgb.cols;
+	result->height = result_rgb.rows;
 
-	outLeft = result_mat(cv::Rect(0, 0, left_small.cols, left_small.rows));
-	outRight = result_mat(cv::Rect(result_mat.cols / 2, 0, right_small.cols, right_small.rows));
+	outLeft = result_rgb(cv::Rect(0, 0, left_small.cols, left_small.rows));
+	outRight = result_rgb(cv::Rect(result_rgb.cols / 2, 0, right_small.cols, right_small.rows));
 
 	left_small.copyTo(outLeft);
 	right_small.copyTo(outRight);
-	return HI_SUCCESS;
+
+	cv::Mat result_yuv;
+	cv::cvtColor(result_rgb, result_yuv, CV_RGB2YUV_I420);
+
+	cv::cvtColor(result_rgb, result_yuv, CV_RGB2YUV_I420);
+	memcpy(result->data, result_yuv.data, sizeof(uchar)*result_yuv.size().height*result_yuv.size().width);
+	return;
 }
