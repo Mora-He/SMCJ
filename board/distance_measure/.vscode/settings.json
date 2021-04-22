@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "chip_sdk_headers.h": "c",
+        "seeta_face2_detect_adpt.h": "c"
+    }
+}
