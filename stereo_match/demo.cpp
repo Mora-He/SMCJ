@@ -3,9 +3,9 @@
 int main()
 {
 	cv::Mat left, right;
-	int x = 250, y = 480;
+	int x = 320, y = 240;
 	uchar depth;
-	int t;
+	int64 t;
 	StereoMatch matcher;
 
 	matcher.init();		// 初始化
@@ -15,7 +15,6 @@ int main()
 		left = cv::imread("data/left1.jpg", -1);
 		right = cv::imread("data/right1.jpg", -1);
 
-		std::cout << left.size() << std::endl;
 		if (left.empty() || right.empty())
 		{
 			std::cout << "empty img" << std::endl;
@@ -28,6 +27,8 @@ int main()
 			std::cout << "error" << std::endl;
 			break;
 		}
+		int result = depth;
+		std::cout << result << std::endl;
 		t = cv::getTickCount() - t;
 		printf("Time elapsed:%fms\n", t * 1000 / cv::getTickFrequency());
 	}
