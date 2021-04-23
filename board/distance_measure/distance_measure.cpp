@@ -54,7 +54,7 @@ EXIT:
 
 
 
-int SendPic(const VIDEO_FRAME_INFO_S *left, const VIDEO_FRAME_INFO_S *right, struct ImageData *result_id, long count)
+int SendPic(StereoMatch *matcher, const VIDEO_FRAME_INFO_S *left, const VIDEO_FRAME_INFO_S *right, HI_U32 X, HI_U32 Y)
 // int SendPic(const cv::Mat *left, const cv::Mat *right, cv::Mat *result_id)
 {
 	int iRet = HI_FAILURE;
@@ -115,24 +115,27 @@ int SendPic(const VIDEO_FRAME_INFO_S *left, const VIDEO_FRAME_INFO_S *right, str
 	cv::Mat left_mat(left_id.height, left_id.width, CV_8UC3, pcLeftBgr888PicBufVirAddr);
 	cv::Mat right_mat(right_id.height, right_id.width, CV_8UC3, pcRightBgr888PicBufVirAddr);
 	cv::Mat result_mat(right_id.height, right_id.width, CV_8UC3);
+	uchar depth;
+	matcher->stereo_match(left_mat,right_mat,X,Y,&depth);
+	std::cout << left_mat.size() << std::endl;
 	// the function who gives the result
 	// iRet = Composite(&left_mat,&right_mat,&result_mat);
-	std::string path;
-	char path_left[8] = "left";
-	char path_right[8] = "right";
+	// std::string path;
+	// char path_left[8] = "left";
+	// char path_right[8] = "right";
 
-	if(count % 400 == 0)
-	{
-		printf("count:%d\n",count);
-		// strcpy(path,path_left);
-		path = "/mnt/app/photos/left" + std::to_string(count/400) + ".jpg";
-		// strcat(path,std::to_string(count/1000));
-		imwrite(path,left_mat);
-		// strcpy(path,path_right);
-		path = "/mnt/app/photos/right" + std::to_string(count/400) + ".jpg";
-		// strcat(path,itoa(count/1000));
-		imwrite(path,right_mat);
-	}
+	// if(count % 400 == 0)
+	// {
+	// 	printf("count:%d\n",count);
+	// 	// strcpy(path,path_left);
+	// 	path = "/mnt/app/photos/left" + std::to_string(count/400) + ".jpg";
+	// 	// strcat(path,std::to_string(count/1000));
+	// 	imwrite(path,left_mat);
+	// 	// strcpy(path,path_right);
+	// 	path = "/mnt/app/photos/right" + std::to_string(count/400) + ".jpg";
+	// 	// strcat(path,itoa(count/1000));
+	// 	imwrite(path,right_mat);
+	// }
 
 	iRet = HI_SUCCESS;
 
@@ -143,72 +146,8 @@ EXIT_WITH_FREE:
 EXIT:
 	return iRet;
 }
-// int main()
-// {
-// 	struct ImageData left;
-// 	struct ImageData right;
-// 	struct ImageData result;
 
-// 	cv::Mat left_mat = cv::imread("right.jpg");
-// 	cv::Mat right_mat = cv::imread("right.jpg");
-
-// 	cv::Size size(std::max(left_mat.cols, right_mat.cols), std::max(left_mat.rows, right_mat.rows));
-// 	cv::Mat result_mat;
-	
-// 	result_mat.create(size, CV_MAKETYPE(left_mat.depth(), 3));
-
-// 	result.data = result_mat.data;
-
-// 	left.data = left_mat.data;
-// 	left.channels = left_mat.channels();
-// 	left.height = left_mat.rows;
-// 	left.width = left_mat.cols;
-
-// 	right.data = right_mat.data;
-// 	right.channels = right_mat.channels();
-// 	right.height = right_mat.rows;
-// 	right.width = right_mat.cols;
-
-// 	Composite(&left, &right, &result);
-
-// 	cv::imshow("merge", result_mat);
-// 	cv::waitKey();
-// 	return 0;
-// }
 
 // 左右的合成
 // int Composite(struct ImageData* left, struct ImageData* right, struct ImageData* result)
-int Composite(cv::Mat *left, cv::Mat *right, cv::Mat *result)
-{
-	// cv::Mat left_mat(left->height, left->width, CV_8UC3);
-	// cv::Mat right_mat(right->height, right->width, CV_8UC3);
-	// cv::Mat left_small, right_small;
-	// cv::Mat outLeft, outRight;
-	
-	// cv::Size size(std::max(left_mat.cols, right_mat.cols), std::max(left_mat.rows, right_mat.rows));
-	// cv::Mat result_mat;
 
-	// left_mat.data = left->data;
-	// right_mat.data = right->data;
-
-	// result_mat.create(size, CV_MAKETYPE(left_mat.depth(), 3));
-	// result_mat.data = result->data;
-	// result_mat = cvScalarAll(0);
-
-	// cv::resize(left_mat, left_small, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
-	// cv::resize(right_mat, right_small, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
-
-
-	// result->channels = result_mat.channels();
-	// result->width = result_mat.cols;
-	// result->height = result_mat.rows;
-
-	// outLeft = result_mat(cv::Rect(0, 0, left_small.cols, left_small.rows));
-	// outRight = result_mat(cv::Rect(result_mat.cols / 2, 0, right_small.cols, right_small.rows));
-
-	// left_small.copyTo(outLeft);
-	// right_small.copyTo(outRight);
-	// printf("left width:%d,left height:%d;right width:%d,right height:%d",
-	// 		left->cols,left->rows,right->cols,right->rows);
-	return HI_SUCCESS;
-}

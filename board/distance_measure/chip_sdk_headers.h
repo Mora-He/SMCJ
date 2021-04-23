@@ -106,6 +106,9 @@
 #include "mpi_vgs.h"
 #include "mpi_ive.h"
 
+#include "hifb.h"
+// #include "fb.h"
+
 
 #define MIPI_DEV_NODE       "/dev/hi_mipi"
 
