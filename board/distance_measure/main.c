@@ -971,8 +971,17 @@ int main(int argc, char *argv[])
 	}
 	StartObjOsd();
 	s_stDemoMngCtx.bContinue = true;
-	long count=1;
-
+	
+	
+	// ******** the instance of stereo match class ************
+	StereoMatch matcher;
+	matcher.init();
+	// ******** the position of mouse ************
+	HI_U32 X = 0;
+	HI_U32 Y = 0;
+	// ******** enable the /dev/fb0 **************
+	HI_U32 fd;
+	fd = open("/dev/fb0", O_RDWR, 0);	// step 1,open the buffer
 	while (s_stDemoMngCtx.bContinue)
 	{	
 		// get left frame
@@ -992,8 +1001,8 @@ int main(int argc, char *argv[])
 // SEETA_FACE2_ADPT_SendPic(hAlgInstance, &stCatchYuvFrm, astObjRect, &u32RectNum);
 
 		// calculate the distance
-		count++;
-		SendPic(&left, &right, &result_id, count);		// defined in distance_measure.h
+		
+		SendPic(&matcher, &left, &right, X, Y);		// defined in distance_measure.h
 		HI_MPI_VPSS_ReleaseChnFrame(0, 1, &left);
 		HI_MPI_VPSS_ReleaseChnFrame(1, 1, &right);
 
@@ -1013,6 +1022,7 @@ int main(int argc, char *argv[])
 		// UpdateObjOsd(astObjRect, u32RectNum);
 	}
 	StopObjOsd();
+	close(fd);
 	// iRet = SEETA_FACE2_ADPT_DestroyInstance(hAlgInstance);
 
 	//VIC_TODO: release resource.
