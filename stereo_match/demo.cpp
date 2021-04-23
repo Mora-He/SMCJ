@@ -15,6 +15,7 @@ int main()
 		left = cv::imread("data/left1.jpg", -1);
 		right = cv::imread("data/right1.jpg", -1);
 
+
 		if (left.empty() || right.empty())
 		{
 			std::cout << "empty img" << std::endl;

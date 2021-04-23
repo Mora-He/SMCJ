@@ -23,8 +23,8 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 		left = leftFrame;
 		right = rightFrame;
 	}
-	remap(left, leftTemp, map[0][0], map[0][1], cv::INTER_LINEAR);
-	remap(right, rightTemp, map[1][0], map[1][1], cv::INTER_LINEAR);
+	cv::remap(left, leftTemp, map[0][0], map[0][1], cv::INTER_LINEAR);
+	cv::remap(right, rightTemp, map[1][0], map[1][1], cv::INTER_LINEAR);
 	cv::cvtColor(leftTemp, left, cv::COLOR_BGR2GRAY);
 	cv::cvtColor(rightTemp, right, cv::COLOR_BGR2GRAY);	
 
@@ -62,6 +62,58 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 	{
 		*depthData = uchar((float)fxMulBase / (float)dispData[id]);
 	}
+
+	//cv::rectangle(leftTemp, roi1, cv::Scalar(0, 0, 255), 3, 8);
+
+	//cv::Mat leftTempBig;
+	//int method = scale > 1 ? cv::INTER_AREA : cv::INTER_CUBIC;
+	//cv::resize(leftTemp, leftTempBig, cv::Size(), scale, scale, method);
+
+	//cv::imshow("rec", leftTempBig);
+	//cv::Mat disp8_3c;
+	//cv::applyColorMap(disp, disp8_3c, cv::COLORMAP_TURBO);
+	//cv::imshow("disp8_3c", disp8_3c);
+	//cv::waitKey();
+
+	std::cout << (int)dispData[0] << std::endl;
+	int max_dis = dispData[std::max_element(dispData, dispData + disp.cols*disp.rows) - dispData];
+	std::cout << ((float)fxMulBase / max_dis) << std::endl;
+	
+	int length = 25;
+	int pow = length * length;
+	int maxLeft = roi1.width- length;
+	int maxBottom = roi1.height - length;
+	id = 0;
+	int width = disp.cols;
+	int max = 0;
+	int max_x = 0, max_y = 0;
+	for (int i = 0; i < maxBottom; i += length)
+	{
+		for (int j = 0; j < maxLeft; j += length)
+		{
+			int start_x = roi1.x + i;
+			int start_y = roi1.y + j;
+			int start = start_x * width + start_y;
+			int sum = 0;
+			for (int k = 0; k < length; k++)
+			{
+				int wi = k * width;
+				for (int m = 0; m < length; m++)
+				{
+					sum += dispData[start + wi + m];
+				}
+			}
+			if (sum / pow > max)
+			{
+				max_x = start_x;
+				max_y = start_y;
+				max = sum / pow;
+			}
+		}
+	}
+	cv::imshow("disp8", disp8);
+	cv::waitKey();
+
 	return 0;
 }
 
@@ -74,7 +126,7 @@ int StereoMatch::init()
 
 	SADWindowSize = 9;
 	scale = 1;							// 调参参数更改！！！！！！！！！！
-	imgSize = cv::Size(640, 480);		// 图片像素大小不能改变，如果图片改变，更改像素大小
+	imgSize = cv::Size(640*scale, 480*scale);		// 图片像素大小不能改变，如果图片改变，更改像素大小
 	numberOfDisparities = ((imgSize.width / 8) + 15) & -16;
 	alg = 0;
 

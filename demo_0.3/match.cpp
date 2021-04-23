@@ -19,17 +19,17 @@ static void saveXYZ(const char* filename, const Mat& mat)
 
 int stereo_match(Mat leftFrame, Mat rightFrame, Mat* depth, int alg, bool outFlag, bool speFlag, bool fileFlag)
 {
-	Mat left = leftFrame, right = rightFrame, disparity;
-	int SADWindowSize = 9, numberOfDisparities = -1;		// SAD窗口大小（匹配块大小），最大视差(原256)！！！！！！！！！！！
-	bool no_display = true, color_display = false;
-	float scale = 0.3;
-	string intrinsic_filename = speFlag ? "intrinsic.yml" : "";	// 输入
-	string extrinsic_filename = speFlag ? "extrinsic.yml" : "";
-	string disparity_filename = fileFlag ? "disparity.jpg" : "";	// 视差图文件
-	string point_cloud_filename = fileFlag ? "point_cloud.pcd" : "";	// 点云图文件
+	// Mat left = leftFrame, right = rightFrame, disparity;
+	// int SADWindowSize = 9, numberOfDisparities = -1;		// SAD窗口大小（匹配块大小），最大视差(原256)！！！！！！！！！！！
+	// bool no_display = true, color_display = false;
+	// float scale = 0.3;
+	// string intrinsic_filename = speFlag ? "intrinsic.yml" : "";	// 输入
+	// string extrinsic_filename = speFlag ? "extrinsic.yml" : "";
+	// string disparity_filename = fileFlag ? "disparity.jpg" : "";	// 视差图文件
+	// string point_cloud_filename = fileFlag ? "point_cloud.pcd" : "";	// 点云图文件
 
-	Ptr<StereoBM> bm = StereoBM::create(16, 9);
-	Ptr<StereoSGBM> sgbm = StereoSGBM::create(0, 16, 3);
+	// Ptr<StereoBM> bm = StereoBM::create(16, 9);
+	// Ptr<StereoSGBM> sgbm = StereoSGBM::create(0, 16, 3);
 
 	// 判空
 	if (leftFrame.empty() || rightFrame.empty())
@@ -49,7 +49,7 @@ int stereo_match(Mat leftFrame, Mat rightFrame, Mat* depth, int alg, bool outFla
 	//cvtColor(leftFrame, left, cv::COLOR_RGB2GRAY);	// test
 	//cvtColor(rightFrame, right, cv::COLOR_RGB2GRAY);
 
-	Size imgSize = left.size();
+	// Size imgSize = left.size();
 	Rect roi1, roi2;
 	Mat Q;
 
@@ -57,41 +57,41 @@ int stereo_match(Mat leftFrame, Mat rightFrame, Mat* depth, int alg, bool outFla
 	if (!intrinsic_filename.empty() && !extrinsic_filename.empty())
 	{
 		// 读取intrinsic
-		FileStorage fs(intrinsic_filename, FileStorage::READ);
-		if (!fs.isOpened())
-		{
-			//printf("Failed to open file %s\n", intrinsic_filename.c_str());
-			return -1;
-		}
+		// FileStorage fs(intrinsic_filename, FileStorage::READ);
+		// if (!fs.isOpened())
+		// {
+			// //printf("Failed to open file %s\n", intrinsic_filename.c_str());
+			// return -1;
+		// }
 
-		Mat M1, D1, M2, D2;
-		fs["M1"] >> M1;
-		fs["D1"] >> D1;
-		fs["M2"] >> M2;
-		fs["D2"] >> D2;
+		// Mat M1, D1, M2, D2;
+		// fs["M1"] >> M1;
+		// fs["D1"] >> D1;
+		// fs["M2"] >> M2;
+		// fs["D2"] >> D2;
 
-		M1 *= scale;
-		M2 *= scale;
+		// M1 *= scale;
+		// M2 *= scale;
 
 		// 读取extrinsic
-		fs.open(extrinsic_filename, FileStorage::READ);
-		if (!fs.isOpened())
-		{
-			//printf("Failed to open file %s\n", extrinsic_filename.c_str());
-			return -1;
-		}
+		// fs.open(extrinsic_filename, FileStorage::READ);
+		// if (!fs.isOpened())
+		// {
+			// //printf("Failed to open file %s\n", extrinsic_filename.c_str());
+			// return -1;
+		// }
 
-		Mat R, T, R1, P1, R2, P2;
-		fs["R"] >> R;
-		fs["T"] >> T;
+		// Mat R, T, R1, P1, R2, P2;
+		// fs["R"] >> R;
+		// fs["T"] >> T;
 
-		// 双目矫正参数
-		stereoRectify(M1, D1, M2, D2, imgSize, R, T, R1, R2, P1, P2, Q, CALIB_ZERO_DISPARITY, -1, imgSize, &roi1, &roi2);
+		// // 双目矫正参数
+		// stereoRectify(M1, D1, M2, D2, imgSize, R, T, R1, R2, P1, P2, Q, CALIB_ZERO_DISPARITY, -1, imgSize, &roi1, &roi2);
 		
-		// 矫正畸变
-		Mat map11, map12, map21, map22;
-		initUndistortRectifyMap(M1, D1, R1, P1, imgSize, CV_16SC2, map11, map12);
-		initUndistortRectifyMap(M2, D2, R2, P2, imgSize, CV_16SC2, map21, map22);
+		// // 矫正畸变
+		// Mat map11, map12, map21, map22;
+		// initUndistortRectifyMap(M1, D1, R1, P1, imgSize, CV_16SC2, map11, map12);
+		// initUndistortRectifyMap(M2, D2, R2, P2, imgSize, CV_16SC2, map21, map22);
 
 		Mat img1r, img2r;
 		remap(left, img1r, map11, map12, INTER_LINEAR);
@@ -102,42 +102,42 @@ int stereo_match(Mat leftFrame, Mat rightFrame, Mat* depth, int alg, bool outFla
 	}
 
 	// 算法参数设置
-	numberOfDisparities = numberOfDisparities > 0 ? numberOfDisparities : ((imgSize.width / 8) + 15) & -16;
+	// numberOfDisparities = numberOfDisparities > 0 ? numberOfDisparities : ((imgSize.width / 8) + 15) & -16;
 
-	bm->setROI1(roi1);
-	bm->setROI2(roi2);
-	bm->setPreFilterCap(31);
-	bm->setBlockSize(SADWindowSize > 0 ? SADWindowSize : 9);
-	bm->setMinDisparity(0);
-	bm->setNumDisparities(numberOfDisparities);
-	bm->setTextureThreshold(10);
-	bm->setUniquenessRatio(15);
-	bm->setSpeckleWindowSize(100);
-	bm->setSpeckleRange(32);
-	bm->setDisp12MaxDiff(1);
+	// bm->setROI1(roi1);
+	// bm->setROI2(roi2);
+	// bm->setPreFilterCap(31);
+	// bm->setBlockSize(SADWindowSize > 0 ? SADWindowSize : 9);
+	// bm->setMinDisparity(0);
+	// bm->setNumDisparities(numberOfDisparities);
+	// bm->setTextureThreshold(10);
+	// bm->setUniquenessRatio(15);
+	// bm->setSpeckleWindowSize(100);
+	// bm->setSpeckleRange(32);
+	// bm->setDisp12MaxDiff(1);
 
-	sgbm->setPreFilterCap(32);	// 预处理滤波器的截断（原63）
-	int sgbmWinSize = SADWindowSize > 0 ? SADWindowSize : 3;
-	sgbm->setBlockSize(sgbmWinSize);
+	// sgbm->setPreFilterCap(32);	// 预处理滤波器的截断（原63）
+	// int sgbmWinSize = SADWindowSize > 0 ? SADWindowSize : 3;
+	// sgbm->setBlockSize(sgbmWinSize);
 
-	int cn = left.channels();
+	// int cn = left.channels();
 
-	sgbm->setP1(8 * cn*sgbmWinSize*sgbmWinSize);
-	sgbm->setP2(32 * cn*sgbmWinSize*sgbmWinSize);
-	sgbm->setMinDisparity(0);
-	sgbm->setNumDisparities(numberOfDisparities);
-	sgbm->setUniquenessRatio(10);
-	sgbm->setSpeckleWindowSize(100);
-	sgbm->setSpeckleRange(32);
-	sgbm->setDisp12MaxDiff(1);
-	if (alg == STEREO_HH)
-		sgbm->setMode(StereoSGBM::MODE_HH);
-	else if (alg == STEREO_SGBM)
-		sgbm->setMode(StereoSGBM::MODE_SGBM);
-	else if (alg == STEREO_HH4)
-		sgbm->setMode(StereoSGBM::MODE_HH4);
-	else if (alg == STEREO_3WAY)
-		sgbm->setMode(StereoSGBM::MODE_SGBM_3WAY);
+	// sgbm->setP1(8 * cn*sgbmWinSize*sgbmWinSize);
+	// sgbm->setP2(32 * cn*sgbmWinSize*sgbmWinSize);
+	// sgbm->setMinDisparity(0);
+	// sgbm->setNumDisparities(numberOfDisparities);
+	// sgbm->setUniquenessRatio(10);
+	// sgbm->setSpeckleWindowSize(100);
+	// sgbm->setSpeckleRange(32);
+	// sgbm->setDisp12MaxDiff(1);
+	// if (alg == STEREO_HH)
+		// sgbm->setMode(StereoSGBM::MODE_HH);
+	// else if (alg == STEREO_SGBM)
+		// sgbm->setMode(StereoSGBM::MODE_SGBM);
+	// else if (alg == STEREO_HH4)
+		// sgbm->setMode(StereoSGBM::MODE_HH4);
+	// else if (alg == STEREO_3WAY)
+		// sgbm->setMode(StereoSGBM::MODE_SGBM_3WAY);
 
 	// 计算
 	Mat disp, disp8;
