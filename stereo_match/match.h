@@ -22,7 +22,6 @@ public:
 	int numberOfDisparities;
 
 	cv::Mat disp, disp8;
-	cv::Mat depth;
 	cv::Ptr<cv::StereoBM> bm;
 	cv::Ptr<cv::StereoSGBM> sgbm;
 	cv::Size imgSize;
@@ -32,14 +31,14 @@ public:
 	int alg;	// 0:BM, 1:SGBM;
 
 	/*-----------------------------------
-	 * åŠŸèƒ½ï¼šåˆå§‹åŒ–å†…éƒ¨å˜é‡ï¼Œè½½å…¥åŒç›®å®šæ ‡ç»“æœï¼Œmatchå‚æ•°è®¾ç½®
-	 * è¿”å›å€¼ï¼š0æˆåŠŸï¼Œ-1å¤±è´¥
+	 * ¹¦ÄÜ£º³õÊ¼»¯ÄÚ²¿±äÁ¿£¬ÔØÈëË«Ä¿¶¨±ê½á¹û£¬match²ÎÊıÉèÖÃ
+	 * ·µ»ØÖµ£º0³É¹¦£¬-1Ê§°Ü
 	 *-----------------------------------
 	 */
 	int init();
 
 	/*-----------------------------------
-	 * åŠŸèƒ½ï¼šåŒ¹é…
+	 * ¹¦ÄÜ£ºÆ¥Åä
 	 *-----------------------------------
 	 */
 	int stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int y, uchar* depthData);

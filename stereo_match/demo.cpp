@@ -12,8 +12,8 @@ int main()
 
 	while (true)
 	{
-		left = cv::imread("data/left1.jpg", -1);
-		right = cv::imread("data/right1.jpg", -1);
+		left = cv::imread("data/left3.jpg", -1);
+		right = cv::imread("data/right3.jpg", -1);
 
 
 		if (left.empty() || right.empty())
