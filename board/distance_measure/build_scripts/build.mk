@@ -13,8 +13,9 @@ ifeq ($(DEBUG), y)
     CMP_FLAGS   += -ggdb
 endif
 
-CPP_FLAGS   += -fpermissive
-CPP_FLAGS += -I /home/lidaoyi/Documents/opencv-3.4.14/install/include
+CPP_FLAGS   += -fpermissive 
+# CPP_FLAGS += -I /home/lidaoyi/Documents/opencv-3.4.14/install/include
+CPP_FLAGS += -I /home/lidaoyi/Downloads/opencv-3.4.14/install_hilinux/include
 
 SRC_FILES   += $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.c))
 SRC_FILES   += $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.cpp))
@@ -23,9 +24,11 @@ OBJS_TO_BUILD += $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SRC_FILES)))
 
 INC_FLAGS   += $(addprefix -I, $(INC_DIR))
 LD_FLAGS   += $(addprefix -L, $(MEDIA_LIBS_RELEASE_DEST_DIR))
-LD_FLAGS += $(addprefix -L, /home/lidaoyi/Documents/opencv-3.4.14/install/lib)
-LD_FLAGS += -lopencv_world -lpthread 
-# LD_FLAGS += -L/home/lidaoyi/Documents/opencv-3.4.14/install/lib
+# LD_FLAGS += $(addprefix -L, /home/lidaoyi/Documents/opencv-3.4.14/install/lib)
+LD_FLAGS += $(addprefix -L, /home/lidaoyi/Downloads/opencv-3.4.14/install_hilinux/lib)
+LD_FLAGS += -lopencv_world -lpthread -lm 
+# LD_FLAGS += -L /home/lidaoyi/Downloads/opencv-3.4.14/install_static/lib
+
 ifeq ($(OS_KERNEL), liteos)
 	APP_BIN     := $(TARGET).liteos
 else
@@ -78,7 +81,7 @@ bin:$(OBJS_TO_BUILD)
 	@echo "                    Congradulations Build $(APP_BIN) Successfully for $(CHIP)"
 	@echo ""
 	@echo "------------------------------------------------------------------------------------------------------------------"    
-	
+
 	    
 lib: $(OBJS_TO_BUILD) 
 ifneq ($(OBJS_TO_BUILD), )

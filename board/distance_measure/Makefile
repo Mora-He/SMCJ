@@ -46,7 +46,7 @@ LD_FLAGS   += $(foreach dir, $(MEDIA_LIBS_RELEASE_DEST_DIR), $(wildcard $(dir)/l
 LD_FLAGS            += -lpthread -lm
 LD_FLAGS            += -ldl
 LD_FLAGS            += -lresolv -lrt 
-#LD_FLAGS            += -static
+# LD_FLAGS            += -static
 
 #CMP_FLAGS   += -Werror -O3
 
