@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
 #include <unistd.h>
 #include <pthread.h>
 #include <signal.h>
@@ -977,11 +977,11 @@ int main(int argc, char *argv[])
 	StereoMatch matcher;
 	matcher.init();
 	// ******** the position of mouse ************
-	HI_U32 X = 0;
-	HI_U32 Y = 0;
+	HI_U32 X = 500;
+	HI_U32 Y = 500;
 	// ******** enable the /dev/fb0 **************
 	HI_U32 fd;
-	fd = open("/dev/fb0", O_RDWR, 0);	// step 1,open the buffer
+	//fd = open("/dev/fb0", O_RDWR, 0);	// step 1,open the buffer
 	while (s_stDemoMngCtx.bContinue)
 	{	
 		// get left frame
@@ -1022,7 +1022,7 @@ int main(int argc, char *argv[])
 		// UpdateObjOsd(astObjRect, u32RectNum);
 	}
 	StopObjOsd();
-	close(fd);
+	// close(fd);
 	// iRet = SEETA_FACE2_ADPT_DestroyInstance(hAlgInstance);
 
 	//VIC_TODO: release resource.

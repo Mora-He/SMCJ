@@ -117,7 +117,8 @@ int SendPic(StereoMatch *matcher, const VIDEO_FRAME_INFO_S *left, const VIDEO_FR
 	cv::Mat result_mat(right_id.height, right_id.width, CV_8UC3);
 	uchar depth;
 	matcher->stereo_match(left_mat,right_mat,X,Y,&depth);
-	std::cout << left_mat.size() << std::endl;
+	printf("distance of (%d, %d):%d\n",X, Y, depth);
+	// std::cout << left_mat.size() << std::endl;
 	// the function who gives the result
 	// iRet = Composite(&left_mat,&right_mat,&result_mat);
 	// std::string path;
