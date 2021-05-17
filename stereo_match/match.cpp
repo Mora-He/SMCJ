@@ -136,7 +136,7 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 	//int ix = sx;
 	//int i = sx, j;
 
-	//// ³õÊ¼»¯
+	//// åˆå§‹åŒ–
 	//int iwidth = i * width;
 	//for (j = sy + 1; j < width; j++)
 	//{
@@ -150,7 +150,7 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 	//}
 	//ey = j - 1;
 
-	//// Ã¿Ò»ĞĞ
+	//// æ¯ä¸€è¡Œ
 	//for (i = sx + 1; i < height; i++)
 	//{
 	//	iwidth = i * width;
@@ -164,7 +164,7 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 		//}
 		//std::cout << std::endl;
 
-		//// ×ó±ßÀ©Õ¹
+		//// å·¦è¾¹æ‰©å±•
 		//if (depth_data[iwidth + sy] == min_data)
 		//{
 		//	for (j = sy - 1; j >= 0; j--)
@@ -181,7 +181,7 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 		//	}
 		//	if (depth_data[iwidth + j] != min_data) break;
 		//}
-		//// ×ó±ß»ØËõ
+		//// å·¦è¾¹å›ç¼©
 		//else
 		//{
 		//	for (j = left_iy + 1; j < ey; j++)
@@ -196,7 +196,7 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 		//		break;
 		//	}
 		//}
-		// ÓÒ±ßÀ©Õ¹
+		// å³è¾¹æ‰©å±•
 		//if (depth_data[iwidth + ey] == min_data)
 		//{
 		//	for (j = ey + 1; j < width; j++)
@@ -205,7 +205,7 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 		//	}
 		//	ey = j - 1;
 		//}
-		// ÓÒ±ß»ØËõ
+		// å³è¾¹å›ç¼©
 		//else
 		//{
 		//	for (j = ey - 1; j > sy; j--)
@@ -220,7 +220,7 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 		//		break;
 		//	}
 		//}
-		//// µ÷Õûsy£¬ey
+		//// è°ƒæ•´syï¼Œey
 		//if (left_iy < sy)
 		//{
 		//	sy = left_iy;
@@ -233,7 +233,7 @@ int StereoMatch::stereo_match(cv::Mat leftFrame, cv::Mat rightFrame, int x, int 
 	//ex = i - 1;
 
 
-	// £¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡
+	// ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼
 	std::cout << sx << " " << sy << " " << ex << " " << ey << std::endl;
 	cv::rectangle(leftFrame, cv::Rect(sy,sx,ey-sy,ex-sx), cv::Scalar(0, 0, 255), 3, 8);
 	cv::imshow("left", leftFrame);
@@ -294,11 +294,11 @@ int StereoMatch::init()
 	std::string filename = "intrinsic.yml";
 	cv::Mat M1, D1, M2, D2;
 	cv::Mat R, T, R1, P1, R2, P2, Q;
-	int cn = 3;			// Ö¡Í¨µÀÊı3
+	int cn = 3;			// å¸§é€šé“æ•°3
 
 	SADWindowSize = 9;
-	scale = 1;							// µ÷²Î²ÎÊı¸ü¸Ä£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡	1 0.6 923£» 0 0.2/0.4
-	imgSize = cv::Size(640*scale, 480*scale);		// Í¼Æ¬ÏñËØ´óĞ¡²»ÄÜ¸Ä±ä£¬Èç¹ûÍ¼Æ¬¸Ä±ä£¬¸ü¸ÄÏñËØ´óĞ¡
+	scale = 1;							// è°ƒå‚å‚æ•°æ›´æ”¹ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼	1 0.6 923ï¼› 0 0.2/0.4
+	imgSize = cv::Size(640*scale, 480*scale);		// å›¾ç‰‡åƒç´ å¤§å°ä¸èƒ½æ”¹å˜ï¼Œå¦‚æœå›¾ç‰‡æ”¹å˜ï¼Œæ›´æ”¹åƒç´ å¤§å°
 	numberOfDisparities = ((imgSize.width / 8) + 15) & -16;
 	alg = 1;
 
@@ -393,7 +393,7 @@ int StereoMatch::init()
 	sgbm->setDisp12MaxDiff(1);
 	sgbm->setMode(cv::StereoSGBM::MODE_SGBM);
 
-	// ×ªÉî¶ÈÍ¼
+	// è½¬æ·±åº¦å›¾
 	float fx = (float)(M1.at<double>(0, 0) + M2.at<double>(0, 0)) / 2;
 	float baseline = sqrt((float)T.at<double>(0, 0)*T.at<double>(0, 0)
 		+ T.at<double>(1, 0)*T.at<double>(1, 0)
