@@ -297,24 +297,29 @@ int StereoMatch::init()
 	int cn = 3;			// Â∏ßÈÄöÈÅìÊï∞3
 
 	SADWindowSize = 9;
+<<<<<<< HEAD
 	scale = 1;							// Ë∞ÉÂèÇÂèÇÊï∞Êõ¥ÊîπÔºÅÔºÅÔºÅÔºÅÔºÅÔºÅÔºÅÔºÅÔºÅÔºÅ	1 0.6 923Ôºõ 0 0.2/0.4
 	imgSize = cv::Size(640*scale, 480*scale);		// ÂõæÁâáÂÉèÁ¥†Â§ßÂ∞è‰∏çËÉΩÊîπÂèòÔºåÂ¶ÇÊûúÂõæÁâáÊîπÂèòÔºåÊõ¥ÊîπÂÉèÁ¥†Â§ßÂ∞è
+=======
+	scale = 0.7;							// µ˜≤Œ≤Œ ˝∏¸∏ƒ£°£°£°£°£°£°£°£°£°£°	1 0.6 923£ª 0 0.2/0.4
+	imgSize = cv::Size(640*scale, 480*scale);		// Õº∆¨œÒÀÿ¥Û–°≤ªƒ‹∏ƒ±‰£¨»Áπ˚Õº∆¨∏ƒ±‰£¨∏¸∏ƒœÒÀÿ¥Û–°
+>>>>>>> ddd4e6670797755283b14aa8cde4f25ea6ae6498
 	numberOfDisparities = ((imgSize.width / 8) + 15) & -16;
-	alg = 1;
+	alg = 0;
 
 	bm = cv::StereoBM::create(16, 3);
 	sgbm = cv::StereoSGBM::create(0, 16, 3);
 
-	//cv::FileStorage fs(filename, cv::FileStorage::READ);
-	//if (!fs.isOpened())
-	//{
-	//	return -1;
-	//}
+	cv::FileStorage fs(filename, cv::FileStorage::READ);
+	if (!fs.isOpened())
+	{
+		return -1;
+	}
 
-	//fs["M1"] >> M2;
-	//fs["D1"] >> D1;
-	//fs["M2"] >> M2;
-	//fs["D2"] >> D2;
+	fs["M1"] >> M1;
+	fs["D1"] >> D1;
+	fs["M2"] >> M2;
+	fs["D2"] >> D2;
 	//M1.create(cv::Size(3, 3), CV_64FC1);
 	//D1.create(cv::Size(14, 1), CV_64FC1);
 	//M2.create(cv::Size(3, 3), CV_64FC1);
@@ -322,48 +327,60 @@ int StereoMatch::init()
 	//R.create(cv::Size(3, 3), CV_64FC1);
 	//T.create(cv::Size(1, 3), CV_64FC1);
 
-	std::vector<double> M1_data = { 2.5820512735289833e+02, 0., 3.1950000000000000e+02, 0.,
-	   3.4406783803722487e+02, 2.3950000000000000e+02, 0., 0., 1. };
-	std::vector<double> D1_data = { -3.2544921217963700e-02, 8.6735853040987826e-02,
-	   -2.2932361872953903e-03, -1.1094704196729626e-02, 0., 0., 0., 0.,
-	   0., 0., 0., 0., 0., 0. };
-	std::vector<double> M2_data = { 2.5820512735289833e+02, 0., 3.1950000000000000e+02, 0.,
-	   3.4406783803722487e+02, 2.3950000000000000e+02, 0., 0., 1. };
-	std::vector<double> D2_data = { 5.9463308800314467e-03, 8.3572304929435293e-02,
-	   -1.6389790977124161e-02, 1.2055760066227937e-02, 0., 0., 0., 0.,
-	   0., 0., 0., 0., 0., 0. };
-	std::vector<double> R_data = { 9.9998573822416781e-01, -4.7891047510422126e-03,
-	   -2.3638578530869375e-03, 4.9164961997599796e-03,
-	   9.9835042408239283e-01, 5.7203660718734922e-02,
-	   2.0860041667747336e-03, -5.7214466791100455e-02,
-	   9.9835973144775136e-01 };
-	std::vector<double> T_data = { -3.1235343663935828e+00, -3.1518016128995331e-02,
-	   -2.8709420691250243e-01 };
+	//std::vector<double> M1_data = { 2.5820512735289833e+02, 0., 3.1950000000000000e+02, 0.,
+	//   3.4406783803722487e+02, 2.3950000000000000e+02, 0., 0., 1. };
+	//std::vector<double> D1_data = { -3.2544921217963700e-02, 8.6735853040987826e-02,
+	//   -2.2932361872953903e-03, -1.1094704196729626e-02, 0., 0., 0., 0.,
+	//   0., 0., 0., 0., 0., 0. };
+	//std::vector<double> M2_data = { 2.5820512735289833e+02, 0., 3.1950000000000000e+02, 0.,
+	//   3.4406783803722487e+02, 2.3950000000000000e+02, 0., 0., 1. };
+	//std::vector<double> D2_data = { 5.9463308800314467e-03, 8.3572304929435293e-02,
+	//   -1.6389790977124161e-02, 1.2055760066227937e-02, 0., 0., 0., 0.,
+	//   0., 0., 0., 0., 0., 0. };
+	//std::vector<double> R_data = { 9.9998573822416781e-01, -4.7891047510422126e-03,
+	//   -2.3638578530869375e-03, 4.9164961997599796e-03,
+	//   9.9835042408239283e-01, 5.7203660718734922e-02,
+	//   2.0860041667747336e-03, -5.7214466791100455e-02,
+	//   9.9835973144775136e-01 };
+	//std::vector<double> T_data = { -3.1235343663935828e+00, -3.1518016128995331e-02,
+	//   -2.8709420691250243e-01 };
 
 
-	cv::Mat M1_temp = cv::Mat(M1_data);
-	M1 = M1_temp.reshape(1, 3).clone();
-	cv::Mat D1_temp = cv::Mat(D1_data);
-	D1 = D1_temp.reshape(1, 1).clone();
-	cv::Mat M2_temp = cv::Mat(M2_data);
-	M2 = M2_temp.reshape(1, 3).clone();
-	cv::Mat D2_temp = cv::Mat(D2_data);
-	D2 = D2_temp.reshape(1, 1).clone();
-	cv::Mat R_temp = cv::Mat(R_data);
-	R = R_temp.reshape(1, 3).clone();
-	cv::Mat T_temp = cv::Mat(T_data);
-	T = T_temp.reshape(1, 3).clone();
+	//cv::Mat M1_temp = cv::Mat(M1_data);
+	//M1 = M1_temp.reshape(1, 3).clone();
+	//cv::Mat D1_temp = cv::Mat(D1_data);
+	//D1 = D1_temp.reshape(1, 1).clone();
+	//cv::Mat M2_temp = cv::Mat(M2_data);
+	//M2 = M2_temp.reshape(1, 3).clone();
+	//cv::Mat D2_temp = cv::Mat(D2_data);
+	//D2 = D2_temp.reshape(1, 1).clone();
+	//cv::Mat R_temp = cv::Mat(R_data);
+	//R = R_temp.reshape(1, 3).clone();
+	//cv::Mat T_temp = cv::Mat(T_data);
+	//T = T_temp.reshape(1, 3).clone();
 
 	M1 *= scale;
 	M2 *= scale;
 
-	//fs["R"] >> R;
-	//fs["T"] >> T;
+	fs["R"] >> R;
+	fs["T"] >> T;
 
 	cv::stereoRectify(M1, D1, M2, D2, imgSize, R, T, R1, R2, P1, P2, Q, cv::CALIB_ZERO_DISPARITY, 1, imgSize, &roi1, &roi2);
 
 	cv::initUndistortRectifyMap(M1, D1, R1, P1, imgSize, CV_16SC2, map[0][0], map[0][1]);
 	cv::initUndistortRectifyMap(M2, D2, R2, P2, imgSize, CV_16SC2, map[1][0], map[1][1]);
+
+	//cv::FileStorage fm("map.yml", cv::FileStorage::WRITE);
+	//fm << "map00" << map[0][0];
+	//fm << "map01" << map[0][1];
+	//fm << "map10" << map[1][0];
+	//fm << "map11" << map[1][1];
+	cv::FileStorage fm("map.yml", cv::FileStorage::READ);
+	fm["map00"] >> map[0][0];
+	fm["map01"] >> map[0][1];
+	fm["map10"] >> map[1][0];
+	fm["map11"] >> map[1][1];
+
 
 	// bm
 	bm->setROI1(roi1);

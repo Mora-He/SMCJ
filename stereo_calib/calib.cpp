@@ -129,7 +129,7 @@ void stereo_calib(std::vector<cv::Mat> imagelist, cv::Size boardSize, float squa
 		cv::CALIB_FIX_K5 + 
 		cv::CALIB_FIX_K6 +
 		cv::CALIB_FIX_S1_S2_S3_S4,
-		cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 100, 1e-5));
+		cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 100, 1e-5));	
 	std::cout << "done with RMS error=" << rms << std::endl;
 
 
@@ -217,8 +217,60 @@ void stereo_calib(std::vector<cv::Mat> imagelist, cv::Size boardSize, float squa
 
 	cv::Mat rmap[2][2];
 	//Precompute maps for cv::remap()，坐标映射
-	cv::initUndistortRectifyMap(cameraMatrix[0], distCoeffs[0], R1, P1, imageSize, CV_16SC2, rmap[0][0], rmap[0][1]);
-	cv::initUndistortRectifyMap(cameraMatrix[1], distCoeffs[1], R2, P2, imageSize, CV_16SC2, rmap[1][0], rmap[1][1]);
+	cv::initUndistortRectifyMap(cameraMatrix[0], distCoeffs[0], R1, P1, imageSize, CV_32FC2, rmap[0][0], rmap[0][1]);
+	cv::initUndistortRectifyMap(cameraMatrix[1], distCoeffs[1], R2, P2, imageSize, CV_32FC2, rmap[1][0], rmap[1][1]);
+
+	// map 结果保存
+	cv::FileStorage ft("map.yml", cv::FileStorage::WRITE);
+	if (ft.isOpened())
+	{
+		ft << "rmap00" << rmap[0][0];
+		ft << "rmap01" << rmap[0][1];
+		ft << "rmap10" << rmap[1][0];
+		ft << "rmap11" << rmap[1][1];
+		ft.release();
+	}
+	else
+		std::cout << "Error: can not save the extrinsic parameters\n";
+
+	// map00为（x,y)对应映射，map01无效
+	float* leftData = (float*)rmap[0][0].data;
+	float* rightData = (float*)rmap[1][0].data;
+	int width = rmap[0][0].cols;
+	int height = rmap[0][0].rows;
+	std::ofstream left, right;
+	left.open("leftMap.dat", std::ios::out | std::ios::binary);
+	right.open("rightMap.dat", std::ios::out | std::ios::binary);
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			int id = (i * width + j) * 2;
+			left.write((char*)&leftData[id], sizeof(leftData[id]));
+			left.write((char*)&leftData[id+1], sizeof(leftData[id+1]));			
+			right.write((char*)&rightData[id], sizeof(rightData[id]));
+			right.write((char*)&rightData[id+1], sizeof(rightData[id+1]));
+		}
+	}
+	left.close();
+	right.close();
+
+	//std::ifstream leftIn, rightIn;
+	//leftIn.open("leftMap.dat", std::ios::in | std::ios::out | std::ios::binary);
+	//rightIn.open("rightMap.dat", std::ios::in | std::ios::out | std::ios::binary);
+	//for (int i = 0; i < height; i++)
+	//{
+	//	for (int j = 0; j < width; j++)
+	//	{
+	//		int id = (i * width + j) * 2;
+	//		leftIn.read((char*)&leftData[id], sizeof(leftData[id]));
+	//		leftIn.read((char*)&leftData[id + 1], sizeof(leftData[id + 1]));
+	//		rightIn.read((char*)&rightData[id], sizeof(rightData[id]));
+	//		rightIn.read((char*)&rightData[id + 1], sizeof(rightData[id + 1]));
+	//	}
+	//}
+	//leftIn.close();
+	//rightIn.close();
 
 	cv::Mat canvas;
 	double sf;

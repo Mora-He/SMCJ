@@ -9,6 +9,7 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <iterator>
 #include <stdio.h>
 #include <stdlib.h>
